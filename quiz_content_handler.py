@@ -9,7 +9,9 @@ load_dotenv()
 
 def get_quiz_content():
     encoding = os.getenv('ENCODING')
-    filepath = os.getenv('FILEPATH')
+    directory = f'{os.getcwd()}/questions examples'
+    filename = os.getenv('FILENAME')
+    filepath = f'{directory}/{filename}'
     quiz_content = {}
 
     with open(filepath, 'r', encoding=encoding) as file:
