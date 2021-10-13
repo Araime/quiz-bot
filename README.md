@@ -138,7 +138,7 @@ python vk_bot.py
 
 6. Перейдите в раздел Settings и в пункте Config Vars укажите из вашего файла .env
    TG_DIALOG_BOT, TG_SERVICE_BOT, TG_CHAT_ID, VK_GROUP_TOKEN, REDIS_HOST, REDIS_PORT,
-   REDIS_PASS:  
+   REDIS_PASS, ENCODING, FILEPATH:  
 
 <a href="https://ibb.co/5x70h7H"><img src="https://i.ibb.co/FqPr4PT/8.png" alt="8" border="0"></a>
 
