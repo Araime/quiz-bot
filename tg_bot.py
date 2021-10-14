@@ -26,7 +26,7 @@ def start(update, context: CallbackContext):
     context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
     time.sleep(0.5)
     custom_keyboard = [['Новый вопрос', 'Выход']]
-    reply_markup = ReplyKeyboardMarkup(custom_keyboard)
+    reply_markup = ReplyKeyboardMarkup(custom_keyboard, resize_keyboard=True)
     update.message.reply_text(
         'Добрый день! Я - бот для проведения викторин. Чтобы начать, нажмите "Новый вопрос"'
         'для завершения нажмите "Выхода"',
@@ -53,7 +53,7 @@ def handle_new_question_request(update, context: CallbackContext):
     context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
     time.sleep(0.5)
     custom_keyboard = [['Сдаться', 'Мой счёт', 'Выход']]
-    reply_markup = ReplyKeyboardMarkup(custom_keyboard)
+    reply_markup = ReplyKeyboardMarkup(custom_keyboard, resize_keyboard=True)
     update.message.reply_text(
         question,
         reply_markup=reply_markup
@@ -71,7 +71,7 @@ def handle_solution_attempt(update, context: CallbackContext):
         context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
         time.sleep(0.5)
         custom_keyboard = [['Новый вопрос', 'Мой счёт', 'Выход']]
-        reply_markup = ReplyKeyboardMarkup(custom_keyboard)
+        reply_markup = ReplyKeyboardMarkup(custom_keyboard, resize_keyboard=True)
         update.message.reply_text(
             'Поздравляю! Это правильный ответ! Чтобы продолжить, выберите "Новый вопрос"',
             reply_markup=reply_markup
@@ -81,7 +81,7 @@ def handle_solution_attempt(update, context: CallbackContext):
         context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
         time.sleep(0.5)
         custom_keyboard = [['Сдаться', 'Выход']]
-        reply_markup = ReplyKeyboardMarkup(custom_keyboard)
+        reply_markup = ReplyKeyboardMarkup(custom_keyboard, resize_keyboard=True)
         update.message.reply_text(
             'Неправильно, попробуйте снова',
             reply_markup=reply_markup
@@ -96,7 +96,7 @@ def handle_correct_answer(update, context: CallbackContext):
     context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
     time.sleep(0.5)
     custom_keyboard = [['Новый вопрос', 'Мой счёт', 'Выход']]
-    reply_markup = ReplyKeyboardMarkup(custom_keyboard)
+    reply_markup = ReplyKeyboardMarkup(custom_keyboard, resize_keyboard=True)
     update.message.reply_text(
         f'Правильный ответ: {correct_answer}',
         reply_markup=reply_markup
