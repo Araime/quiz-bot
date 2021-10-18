@@ -20,7 +20,7 @@ logger = logging.getLogger('tg_bot')
 NEW_QUESTION, CHECK_ANSWER = range(2)
 
 
-def start(update, context: CallbackContext):
+def handle_start(update, context: CallbackContext):
     custom_keyboard = [['Новый вопрос', 'Выход']]
     reply_markup = ReplyKeyboardMarkup(custom_keyboard, resize_keyboard=True)
     update.message.reply_text(
@@ -31,12 +31,12 @@ def start(update, context: CallbackContext):
     return NEW_QUESTION
 
 
-def cancel(update, context: CallbackContext):
+def handle_cancel(update, context: CallbackContext):
     update.message.reply_text('До свидания!', reply_markup=ReplyKeyboardRemove())
     return ConversationHandler.END
 
 
-def error(update, context: CallbackContext):
+def handle_error(update, context: CallbackContext):
     logger.exception('Бот "%s" поймал ошибку "%s"', update, context.error)
 
 
@@ -111,24 +111,24 @@ if __name__ == '__main__':
     dp = updater.dispatcher
 
     conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start)],
+        entry_points=[CommandHandler('start', handle_start)],
         states={
             NEW_QUESTION: [
                 MessageHandler(Filters.regex('Новый вопрос'), handle_new_question_request),
                 MessageHandler(Filters.regex('Сдаться'), handle_correct_answer),
-                MessageHandler(Filters.regex('Выход'), cancel)
+                MessageHandler(Filters.regex('Выход'), handle_cancel)
             ],
             CHECK_ANSWER: [
                 MessageHandler(Filters.regex('Новый вопрос'), handle_new_question_request),
                 MessageHandler(Filters.regex('Сдаться'), handle_correct_answer),
-                MessageHandler(Filters.regex('Выход'), cancel),
+                MessageHandler(Filters.regex('Выход'), handle_cancel),
                 MessageHandler(Filters.text, handle_solution_attempt)
             ]
         },
-        fallbacks=[CommandHandler('cancel', cancel)]
+        fallbacks=[CommandHandler('cancel', handle_cancel)]
     )
 
     dp.add_handler(conv_handler)
-    dp.add_error_handler(error)
+    dp.add_error_handler(handle_error)
     updater.start_polling()
     updater.idle()

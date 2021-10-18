@@ -14,7 +14,7 @@ from quiz_content_handler import get_quiz_content, get_answer
 logger = logging.getLogger('vk_bot')
 
 
-def start(event, vk_api):
+def handle_start(event, vk_api):
     keyboard = VkKeyboard(one_time=True)
     keyboard.add_button('Новый вопрос', color=VkKeyboardColor.POSITIVE)
     keyboard.add_button('Закончить', color=VkKeyboardColor.PRIMARY)
@@ -28,7 +28,7 @@ def start(event, vk_api):
     )
 
 
-def cancel(event, vk_api):
+def handle_cancel(event, vk_api):
     keyboard = VkKeyboard(one_time=True)
 
     vk_api.messages.send(
@@ -124,7 +124,7 @@ if __name__ == '__main__':
             # noinspection PyBroadException
             try:
                 if event.text == 'Начать':
-                    start(event, vk_api)
+                    handle_start(event, vk_api)
                 elif event.text == 'Новый вопрос':
                     handle_new_question_request(event, vk_api, r_conn, quiz_content)
                 elif event.text == 'Сдаться':
@@ -132,7 +132,7 @@ if __name__ == '__main__':
                 elif event.text == 'Мой счёт':
                     pass
                 elif event.text == 'Закончить':
-                    cancel(event, vk_api)
+                    handle_cancel(event, vk_api)
                 else:
                     handle_solution_attempt(event, vk_api, r_conn, quiz_content)
             except Exception:
