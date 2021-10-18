@@ -1,12 +1,10 @@
 import logging
 import os
 import random
-import time
 
 import redis
 from dotenv import load_dotenv
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
-from telegram.chataction import ChatAction
 from telegram.ext import (
     CallbackContext,
     ConversationHandler,
@@ -24,8 +22,6 @@ QUIZ_CONTENT = get_quiz_content()
 
 
 def start(update, context: CallbackContext):
-    context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
-    time.sleep(0.5)
     custom_keyboard = [['Новый вопрос', 'Выход']]
     reply_markup = ReplyKeyboardMarkup(custom_keyboard, resize_keyboard=True)
     update.message.reply_text(
@@ -37,8 +33,6 @@ def start(update, context: CallbackContext):
 
 
 def cancel(update, context: CallbackContext):
-    context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
-    time.sleep(0.5)
     update.message.reply_text('До свидания!', reply_markup=ReplyKeyboardRemove())
     return ConversationHandler.END
 
@@ -51,8 +45,6 @@ def handle_new_question_request(update, context: CallbackContext):
     chat_id = update.message.chat_id
     question = random.choice(list(QUIZ_CONTENT.keys()))
     redcon.set(chat_id, question)
-    context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
-    time.sleep(0.5)
     custom_keyboard = [['Сдаться', 'Мой счёт', 'Выход']]
     reply_markup = ReplyKeyboardMarkup(custom_keyboard, resize_keyboard=True)
     update.message.reply_text(
@@ -69,8 +61,6 @@ def handle_solution_attempt(update, context: CallbackContext):
     user_message = update.message.text
     user_message = user_message.replace('.', '').lower()
     if user_message in correct_answer:
-        context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
-        time.sleep(0.5)
         custom_keyboard = [['Новый вопрос', 'Мой счёт', 'Выход']]
         reply_markup = ReplyKeyboardMarkup(custom_keyboard, resize_keyboard=True)
         update.message.reply_text(
@@ -79,8 +69,6 @@ def handle_solution_attempt(update, context: CallbackContext):
         )
         return NEW_QUESTION
     else:
-        context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
-        time.sleep(0.5)
         custom_keyboard = [['Сдаться', 'Выход']]
         reply_markup = ReplyKeyboardMarkup(custom_keyboard, resize_keyboard=True)
         update.message.reply_text(
@@ -94,8 +82,6 @@ def handle_correct_answer(update, context: CallbackContext):
     chat_id = update.message.chat_id
     question = redcon.get(chat_id).decode('utf8')
     correct_answer = get_answer(question, QUIZ_CONTENT)
-    context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
-    time.sleep(0.5)
     custom_keyboard = [['Новый вопрос', 'Мой счёт', 'Выход']]
     reply_markup = ReplyKeyboardMarkup(custom_keyboard, resize_keyboard=True)
     update.message.reply_text(
