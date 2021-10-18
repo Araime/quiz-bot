@@ -96,7 +96,7 @@ def handle_correct_answer(update, context: CallbackContext):
 if __name__ == '__main__':
     load_dotenv()
 
-    quiz_content = get_quiz_content(os.getenv('ENCODING'), os.getenv('FILENAME'))
+    quiz_content = get_quiz_content(os.getenv('FOLDER'))
 
     redcon = redis.Redis(
         host=os.getenv('REDIS_HOST'),

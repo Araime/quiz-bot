@@ -104,7 +104,7 @@ def handle_correct_answer(event, vk_api, redcon, quiz_content):
 if __name__ == '__main__':
     load_dotenv()
 
-    quiz_content = get_quiz_content(os.getenv('ENCODING'), os.getenv('FILENAME'))
+    quiz_content = get_quiz_content(os.getenv('FOLDER'))
 
     redcon = redis.Redis(
         host=os.getenv('REDIS_HOST'),
@@ -137,4 +137,3 @@ if __name__ == '__main__':
                     handle_solution_attempt(event, vk_api, redcon, quiz_content)
             except Exception:
                 logger.exception('vk_bot поймал ошибку: ')
-
