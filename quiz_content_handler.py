@@ -9,8 +9,9 @@ def get_quiz_content(folder):
     quiz_content = {}
 
     for quiz_file in files_sheet:
-        with open(f'{directory}/{quiz_file}', 'r', encoding='UTF-8') as file:
-            files_content.extend(file.read().split('\n\n'))
+        if quiz_file.endswith('.txt'):
+            with open(f'{directory}/{quiz_file}', 'r', encoding='UTF-8') as file:
+                files_content.extend(file.read().split('\n\n'))
 
     for part in files_content:
         if 'Вопрос' in part:
