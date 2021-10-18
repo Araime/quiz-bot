@@ -50,7 +50,12 @@ def handle_new_question_request(event, vk_api, redcon):
     keyboard.add_button('Мой счёт', color=VkKeyboardColor.SECONDARY)
     keyboard.add_button('Закончить', color=VkKeyboardColor.PRIMARY)
 
-    send_message(user_id, message, vk_api, keyboard)
+    vk_api.messages.send(
+        user_id=user_id,
+        message=message,
+        random_id=random.randint(1, 1000),
+        keyboard=keyboard.get_keyboard()
+    )
 
 
 def handle_solution_attempt(event, vk_api, redcon):
@@ -71,7 +76,12 @@ def handle_solution_attempt(event, vk_api, redcon):
         keyboard.add_button('Сдаться', color=VkKeyboardColor.NEGATIVE)
         keyboard.add_button('Закончить', color=VkKeyboardColor.PRIMARY)
 
-    send_message(user_id, message, vk_api, keyboard)
+    vk_api.messages.send(
+        user_id=user_id,
+        message=message,
+        random_id=random.randint(1, 1000),
+        keyboard=keyboard.get_keyboard()
+    )
 
 
 def handle_correct_answer(event, vk_api, redcon):
@@ -87,15 +97,6 @@ def handle_correct_answer(event, vk_api, redcon):
     vk_api.messages.send(
         user_id=user_id,
         message=f'Правильный ответ: {correct_answer}',
-        random_id=random.randint(1, 1000),
-        keyboard=keyboard.get_keyboard()
-    )
-
-
-def send_message(user_id, message, vk_api, keyboard):
-    vk_api.messages.send(
-        user_id=user_id,
-        message=message,
         random_id=random.randint(1, 1000),
         keyboard=keyboard.get_keyboard()
     )
