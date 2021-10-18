@@ -44,7 +44,7 @@ def handle_new_question_request(update, context: CallbackContext):
     global quiz_content
     chat_id = update.message.chat_id
     question = random.choice(list(quiz_content.keys()))
-    redcon.set(chat_id, question)
+    r_conn.set(chat_id, question)
     custom_keyboard = [['Сдаться', 'Мой счёт', 'Выход']]
     reply_markup = ReplyKeyboardMarkup(custom_keyboard, resize_keyboard=True)
     update.message.reply_text(
@@ -57,7 +57,7 @@ def handle_new_question_request(update, context: CallbackContext):
 def handle_solution_attempt(update, context: CallbackContext):
     global quiz_content
     chat_id = update.message.chat_id
-    question = redcon.get(chat_id).decode('utf8')
+    question = r_conn.get(chat_id).decode('utf8')
     correct_answer = get_answer(question, quiz_content).lower()
     user_message = update.message.text
     user_message = user_message.replace('.', '').lower()
@@ -82,7 +82,7 @@ def handle_solution_attempt(update, context: CallbackContext):
 def handle_correct_answer(update, context: CallbackContext):
     global quiz_content
     chat_id = update.message.chat_id
-    question = redcon.get(chat_id).decode('utf8')
+    question = r_conn.get(chat_id).decode('utf8')
     correct_answer = get_answer(question, quiz_content)
     custom_keyboard = [['Новый вопрос', 'Мой счёт', 'Выход']]
     reply_markup = ReplyKeyboardMarkup(custom_keyboard, resize_keyboard=True)
@@ -98,7 +98,7 @@ if __name__ == '__main__':
 
     quiz_content = get_quiz_content(os.getenv('FOLDER'))
 
-    redcon = redis.Redis(
+    r_conn = redis.Redis(
         host=os.getenv('REDIS_HOST'),
         port=os.getenv('REDIS_PORT'),
         password=os.getenv('REDIS_PASS'),

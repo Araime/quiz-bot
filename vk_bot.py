@@ -39,10 +39,10 @@ def cancel(event, vk_api):
     )
 
 
-def handle_new_question_request(event, vk_api, redcon, quiz_content):
+def handle_new_question_request(event, vk_api, r_conn, quiz_content):
     user_id = event.user_id
     message = random.choice(list(quiz_content.keys()))
-    redcon.set(user_id, message)
+    r_conn.set(user_id, message)
 
     keyboard = VkKeyboard(one_time=True)
     keyboard.add_button('Сдаться', color=VkKeyboardColor.NEGATIVE)
@@ -57,9 +57,9 @@ def handle_new_question_request(event, vk_api, redcon, quiz_content):
     )
 
 
-def handle_solution_attempt(event, vk_api, redcon, quiz_content):
+def handle_solution_attempt(event, vk_api, r_conn, quiz_content):
     user_id = event.user_id
-    question = redcon.get(user_id).decode('utf8')
+    question = r_conn.get(user_id).decode('utf8')
     correct_answer = get_answer(question, quiz_content).lower()
     user_message = event.text
     user_message = user_message.replace('.', '').lower()
@@ -83,9 +83,9 @@ def handle_solution_attempt(event, vk_api, redcon, quiz_content):
     )
 
 
-def handle_correct_answer(event, vk_api, redcon, quiz_content):
+def handle_correct_answer(event, vk_api, r_conn, quiz_content):
     user_id = event.user_id
-    question = redcon.get(user_id).decode('utf8')
+    question = r_conn.get(user_id).decode('utf8')
     correct_answer = get_answer(question, quiz_content)
 
     keyboard = VkKeyboard(one_time=True)
@@ -106,7 +106,7 @@ if __name__ == '__main__':
 
     quiz_content = get_quiz_content(os.getenv('FOLDER'))
 
-    redcon = redis.Redis(
+    r_conn = redis.Redis(
         host=os.getenv('REDIS_HOST'),
         port=os.getenv('REDIS_PORT'),
         password=os.getenv('REDIS_PASS'),
@@ -126,14 +126,14 @@ if __name__ == '__main__':
                 if event.text == 'Начать':
                     start(event, vk_api)
                 elif event.text == 'Новый вопрос':
-                    handle_new_question_request(event, vk_api, redcon, quiz_content)
+                    handle_new_question_request(event, vk_api, r_conn, quiz_content)
                 elif event.text == 'Сдаться':
-                    handle_correct_answer(event, vk_api, redcon, quiz_content)
+                    handle_correct_answer(event, vk_api, r_conn, quiz_content)
                 elif event.text == 'Мой счёт':
                     pass
                 elif event.text == 'Закончить':
                     cancel(event, vk_api)
                 else:
-                    handle_solution_attempt(event, vk_api, redcon, quiz_content)
+                    handle_solution_attempt(event, vk_api, r_conn, quiz_content)
             except Exception:
                 logger.exception('vk_bot поймал ошибку: ')
