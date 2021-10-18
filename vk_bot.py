@@ -9,7 +9,7 @@ from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 from vk_api.longpoll import VkLongPoll, VkEventType
 
 from logs_handler import configure_handler
-from quiz_content_handler import get_quiz_content, get_question, get_answer
+from quiz_content_handler import get_quiz_content, get_answer
 
 logger = logging.getLogger('vk_bot')
 QUIZ_CONTENT = get_quiz_content()
@@ -42,7 +42,7 @@ def cancel(event, vk_api):
 
 def handle_new_question_request(event, vk_api, redcon):
     user_id = event.user_id
-    message = get_question(QUIZ_CONTENT)
+    message = random.choice(list(QUIZ_CONTENT.keys()))
     redcon.set(user_id, message)
 
     keyboard = VkKeyboard(one_time=True)

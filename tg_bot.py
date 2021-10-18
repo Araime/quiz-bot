@@ -1,5 +1,6 @@
 import logging
 import os
+import random
 import time
 
 import redis
@@ -15,7 +16,7 @@ from telegram.ext import (
     Updater)
 
 from logs_handler import configure_handler
-from quiz_content_handler import get_quiz_content, get_question, get_answer
+from quiz_content_handler import get_quiz_content, get_answer
 
 logger = logging.getLogger('tg_bot')
 NEW_QUESTION, CHECK_ANSWER = range(2)
@@ -48,7 +49,7 @@ def error(update, context: CallbackContext):
 
 def handle_new_question_request(update, context: CallbackContext):
     chat_id = update.message.chat_id
-    question = get_question(QUIZ_CONTENT)
+    question = random.choice(list(QUIZ_CONTENT.keys()))
     redcon.set(chat_id, question)
     context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
     time.sleep(0.5)

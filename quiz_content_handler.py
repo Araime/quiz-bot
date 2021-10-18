@@ -1,5 +1,4 @@
 import os
-import random
 import re
 
 from dotenv import load_dotenv
@@ -26,11 +25,6 @@ def get_quiz_content():
             answer = answer_content[1].replace('\n', ' ')
             quiz_content[question] = answer
     return quiz_content
-
-
-def get_question(quiz_content):
-    question = random.choice(list(quiz_content.keys()))
-    return question
 
 
 def get_answer(question, quiz_content):
