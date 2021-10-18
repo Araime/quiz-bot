@@ -3,8 +3,6 @@ import re
 
 from dotenv import load_dotenv
 
-load_dotenv()
-
 
 def get_quiz_content():
     encoding = os.getenv('ENCODING')
@@ -31,3 +29,7 @@ def get_answer(question, quiz_content):
     answer = quiz_content[question]
     answer = answer.replace('.', '').replace('"', '').split('(')[0]
     return answer
+
+
+if __name__ == '__main__':
+    load_dotenv()

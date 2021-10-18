@@ -102,7 +102,7 @@ def handle_correct_answer(event, vk_api, redcon):
     )
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     load_dotenv()
 
     redcon = redis.Redis(
