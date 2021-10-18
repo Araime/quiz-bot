@@ -1,13 +1,9 @@
 import os
 import re
 
-from dotenv import load_dotenv
 
-
-def get_quiz_content():
-    encoding = os.getenv('ENCODING')
+def get_quiz_content(encoding, filename):
     directory = f'{os.getcwd()}/questions examples'
-    filename = os.getenv('FILENAME')
     filepath = f'{directory}/{filename}'
     quiz_content = {}
 
@@ -29,7 +25,3 @@ def get_answer(question, quiz_content):
     answer = quiz_content[question]
     answer = answer.replace('.', '').replace('"', '').split('(')[0]
     return answer
-
-
-if __name__ == '__main__':
-    load_dotenv()

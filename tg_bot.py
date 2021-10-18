@@ -18,7 +18,6 @@ from quiz_content_handler import get_quiz_content, get_answer
 
 logger = logging.getLogger('tg_bot')
 NEW_QUESTION, CHECK_ANSWER = range(2)
-QUIZ_CONTENT = get_quiz_content()
 
 
 def start(update, context: CallbackContext):
@@ -42,8 +41,9 @@ def error(update, context: CallbackContext):
 
 
 def handle_new_question_request(update, context: CallbackContext):
+    global quiz_content
     chat_id = update.message.chat_id
-    question = random.choice(list(QUIZ_CONTENT.keys()))
+    question = random.choice(list(quiz_content.keys()))
     redcon.set(chat_id, question)
     custom_keyboard = [['Сдаться', 'Мой счёт', 'Выход']]
     reply_markup = ReplyKeyboardMarkup(custom_keyboard, resize_keyboard=True)
@@ -55,9 +55,10 @@ def handle_new_question_request(update, context: CallbackContext):
 
 
 def handle_solution_attempt(update, context: CallbackContext):
+    global quiz_content
     chat_id = update.message.chat_id
     question = redcon.get(chat_id).decode('utf8')
-    correct_answer = get_answer(question, QUIZ_CONTENT).lower()
+    correct_answer = get_answer(question, quiz_content).lower()
     user_message = update.message.text
     user_message = user_message.replace('.', '').lower()
     if user_message in correct_answer:
@@ -79,9 +80,10 @@ def handle_solution_attempt(update, context: CallbackContext):
 
 
 def handle_correct_answer(update, context: CallbackContext):
+    global quiz_content
     chat_id = update.message.chat_id
     question = redcon.get(chat_id).decode('utf8')
-    correct_answer = get_answer(question, QUIZ_CONTENT)
+    correct_answer = get_answer(question, quiz_content)
     custom_keyboard = [['Новый вопрос', 'Мой счёт', 'Выход']]
     reply_markup = ReplyKeyboardMarkup(custom_keyboard, resize_keyboard=True)
     update.message.reply_text(
@@ -93,6 +95,8 @@ def handle_correct_answer(update, context: CallbackContext):
 
 if __name__ == '__main__':
     load_dotenv()
+
+    quiz_content = get_quiz_content(os.getenv('ENCODING'), os.getenv('FILENAME'))
 
     redcon = redis.Redis(
         host=os.getenv('REDIS_HOST'),

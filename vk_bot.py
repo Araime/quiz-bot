@@ -12,7 +12,6 @@ from logs_handler import configure_handler
 from quiz_content_handler import get_quiz_content, get_answer
 
 logger = logging.getLogger('vk_bot')
-QUIZ_CONTENT = get_quiz_content()
 
 
 def start(event, vk_api):
@@ -40,9 +39,9 @@ def cancel(event, vk_api):
     )
 
 
-def handle_new_question_request(event, vk_api, redcon):
+def handle_new_question_request(event, vk_api, redcon, quiz_content):
     user_id = event.user_id
-    message = random.choice(list(QUIZ_CONTENT.keys()))
+    message = random.choice(list(quiz_content.keys()))
     redcon.set(user_id, message)
 
     keyboard = VkKeyboard(one_time=True)
@@ -58,10 +57,10 @@ def handle_new_question_request(event, vk_api, redcon):
     )
 
 
-def handle_solution_attempt(event, vk_api, redcon):
+def handle_solution_attempt(event, vk_api, redcon, quiz_content):
     user_id = event.user_id
     question = redcon.get(user_id).decode('utf8')
-    correct_answer = get_answer(question, QUIZ_CONTENT).lower()
+    correct_answer = get_answer(question, quiz_content).lower()
     user_message = event.text
     user_message = user_message.replace('.', '').lower()
     if user_message in correct_answer:
@@ -84,10 +83,10 @@ def handle_solution_attempt(event, vk_api, redcon):
     )
 
 
-def handle_correct_answer(event, vk_api, redcon):
+def handle_correct_answer(event, vk_api, redcon, quiz_content):
     user_id = event.user_id
     question = redcon.get(user_id).decode('utf8')
-    correct_answer = get_answer(question, QUIZ_CONTENT)
+    correct_answer = get_answer(question, quiz_content)
 
     keyboard = VkKeyboard(one_time=True)
     keyboard.add_button('Новый вопрос', color=VkKeyboardColor.POSITIVE)
@@ -104,6 +103,8 @@ def handle_correct_answer(event, vk_api, redcon):
 
 if __name__ == '__main__':
     load_dotenv()
+
+    quiz_content = get_quiz_content(os.getenv('ENCODING'), os.getenv('FILENAME'))
 
     redcon = redis.Redis(
         host=os.getenv('REDIS_HOST'),
@@ -125,15 +126,15 @@ if __name__ == '__main__':
                 if event.text == 'Начать':
                     start(event, vk_api)
                 elif event.text == 'Новый вопрос':
-                    handle_new_question_request(event, vk_api, redcon)
+                    handle_new_question_request(event, vk_api, redcon, quiz_content)
                 elif event.text == 'Сдаться':
-                    handle_correct_answer(event, vk_api, redcon)
+                    handle_correct_answer(event, vk_api, redcon, quiz_content)
                 elif event.text == 'Мой счёт':
                     pass
                 elif event.text == 'Закончить':
                     cancel(event, vk_api)
                 else:
-                    handle_solution_attempt(event, vk_api, redcon)
+                    handle_solution_attempt(event, vk_api, redcon, quiz_content)
             except Exception:
                 logger.exception('vk_bot поймал ошибку: ')
 
