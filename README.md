@@ -10,7 +10,7 @@
 удобства добавлена клавиатура, которая динамически меняет кнопки, в зависимости 
 от этапа диалога.
 
-![vk-bot](work examples/vk-quiz.gif)|![tg-bot](work examples/tg-quiz.gif)
+![vk-bot](https://github.com/Araime/quiz-bot/blob/master/work%20examples/vk-quiz.gif)|![tg-bot](https://github.com/Araime/quiz-bot/blob/master/work%20examples/tg-quiz.gif)
 ---------------------|---------------------
 
 [Пример чат-бота telegram](https://t.me/Sheru_support_bot).
