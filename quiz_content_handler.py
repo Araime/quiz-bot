@@ -3,7 +3,7 @@ import re
 
 
 def get_quiz_content(folder):
-    directory = f'{os.getcwd()}/{folder}'
+    directory = f'{folder}'
     files_sheet = sorted(os.listdir(directory))
     files_content = []
     quiz_content = {}
