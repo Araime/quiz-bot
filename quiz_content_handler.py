@@ -3,14 +3,13 @@ import re
 
 
 def get_quiz_content(folder):
-    directory = folder
-    files_sheet = sorted(os.listdir(directory))
+    files_sheet = sorted(os.listdir(folder))
     files_content = []
     quiz_content = {}
 
     for quiz_file in files_sheet:
         if quiz_file.endswith('.txt'):
-            with open(f'{directory}/{quiz_file}', 'r', encoding='UTF-8') as file:
+            with open(f'{folder}/{quiz_file}', 'r', encoding='UTF-8') as file:
                 files_content.extend(file.read().split('\n\n'))
 
     for part in files_content:
